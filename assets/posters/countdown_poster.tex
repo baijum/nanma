@@ -8,6 +8,9 @@
 \definecolor{nanmaPurple}{HTML}{7E1F85}
 \definecolor{nanmaCharcoal}{HTML}{2B2A2A}
 \definecolor{nanmaHighlight}{HTML}{F5F1F9}
+\definecolor{nanmaGold}{HTML}{F2C84B}
+\definecolor{nanmaMint}{HTML}{2BC8AA}
+\definecolor{nanmaCoral}{HTML}{FF8F5C}
 
 \usepackage{graphicx}
 \usepackage{fontspec}
@@ -54,7 +57,7 @@
 }
 
 \usepackage{tikz}
-\usetikzlibrary{calc, shadows.blur}
+\usetikzlibrary{calc, shadows.blur, backgrounds, decorations.pathmorphing, patterns.meta, shapes.geometric}
 \usepackage{pgfcalendar}
 
 \pagestyle{empty}
@@ -91,8 +94,14 @@
 
 % Background layer
 \begin{tikzpicture}[remember picture, overlay]
-  \path[shade, left color=nanmaHighlight, right color=white]
+  \path[shade, left color=nanmaHighlight!80!white, right color=white, shading angle=25]
     (current page.south west) rectangle (current page.north east);
+  \shade[inner color=white, outer color=nanmaHighlight!40!nanmaPurple!15, opacity=0.8]
+    (current page.center) circle (18cm);
+  \begin{scope}[shift={(current page.center)}, rotate=12]
+    \fill[pattern={Lines[angle=45,distance=1cm]}, pattern color=nanmaHighlight!60!white, opacity=0.15]
+      (-21cm,-30cm) rectangle (21cm,30cm);
+  \end{scope}
 \end{tikzpicture}
 
 % Poster layout
@@ -100,6 +109,25 @@
   \node[rounded corners=30pt, fill=white, draw=nanmaHighlight!80!nanmaCharcoal, ultra thick,
         minimum width=25cm, minimum height=35cm, blur shadow={shadow blur steps=8, shadow xshift=0.4cm, shadow yshift=-0.4cm}]
         (card) at (current page.center) {};
+
+  \begin{scope}[on background layer]
+    \path[fill=nanmaPurple!12, rounded corners=40pt]
+      ($(card.north west)+(-1.5cm,0.8cm)$) --
+      ($(card.north east)+(1.5cm,0.8cm)$) --
+      ($(card.north east)+(1.2cm,-1.5cm)$) --
+      ($(card.north west)+(-1.2cm,-1.5cm)$) -- cycle;
+    \path[fill=nanmaGold!12, rounded corners=34pt]
+      ($(card.north west)+(0.5cm,-0.3cm)$) --
+      ($(card.north east)+(-0.5cm,-0.3cm)$) --
+      ($(card.north east)+(-1cm,-1.9cm)$) --
+      ($(card.north west)+(1cm,-1.9cm)$) -- cycle;
+    \foreach \corner/\angle in {north west/0,north east/90,south east/180,south west/270}{
+      \draw[rounded corners=18pt, line width=6pt, nanmaPurple!45]
+        ($(card.\corner)+(\angle:1.8cm)$) -- ($(card.\corner)+(\angle:0.8cm)$);
+      \draw[rounded corners=14pt, line width=3pt, nanmaGold!70]
+        ($(card.\corner)+(\angle+12:1.4cm)$) -- ($(card.\corner)+(\angle+12:0.6cm)$);
+    }
+  \end{scope}
 
   % Anniversary headline
   \node[anchor=north, text=nanmaPurple]
@@ -110,10 +138,26 @@
   \node[anchor=north, inner sep=0pt] (logo) at ($(anniversary.south)+(0,-0.8cm)$)
         {\includegraphics[width=11cm]{assets/posters/logo_nanma.pdf}};
 
+  \coordinate (counterCenter) at ($(logo.south)+(0,-2.8cm)$);
+
+  \begin{scope}[on background layer]
+    \node[regular polygon, regular polygon sides=22, fill=nanmaGold!28, draw=nanmaGold!55, rotate=10,
+          minimum size=11.2cm, opacity=0.55, blur shadow={shadow blur steps=8, shadow xshift=0.3cm, shadow yshift=-0.3cm}]
+          (burst) at (counterCenter) {};
+    \node[regular polygon, regular polygon sides=11, fill=nanmaPurple!14, draw=nanmaPurple!35, rotate=-6,
+          minimum size=10.4cm, opacity=0.5] at (counterCenter) {};
+    \draw[line width=16pt, color=nanmaGold!45, opacity=0.6]
+      (counterCenter) circle (5.1cm);
+    \foreach \angle in {0,15,...,345}{
+      \draw[line width=2pt, color=nanmaPurple!65, rounded corners=2pt]
+        ($(counterCenter)+(\angle:4.7cm)$) -- ($(counterCenter)+(\angle:5.1cm)$);
+    }
+  \end{scope}
+
   % Countdown circle
   \node[circle, draw=nanmaPurple, line width=14pt, minimum size=9cm,
         inner sep=0pt, fill=nanmaHighlight, blur shadow={shadow blur steps=12, shadow xshift=0.5cm, shadow yshift=-0.5cm}]
-        (counter) at ($(logo.south)+(0,-2.8cm)$)
+        (counter) at (counterCenter)
         {\parbox{6.2cm}{\centering
             {\englishfont\bfseries\fontsize{94}{92}\selectfont\DaysRemaining}\\[0.6em]
             {\malayalamfont\bfseries\fontsize{32}{34}\selectfont ദിവസങ്ങൾ}
@@ -130,6 +174,33 @@
         minimum width=20cm, minimum height=1.8cm]
         at ($(card.south)+(0,3cm)$)
         {\englishfont\bfseries\fontsize{42}{44}\selectfont 27 December 2025};
+
+  \node[anchor=north, align=center, text=nanmaCharcoal!85]
+        at ($(card.south)+(0,1.4cm)$)
+        {\englishfont\bfseries\large\textsc{Celebrate Community • Cherish Friendship • Create Memories}};
+
+  \pgfmathsetseed{20251109}
+  \foreach \i in {1,...,48}{
+    \pgfmathrandominteger{\rangle}{0}{360}
+    \pgfmathrandominteger{\rcolor}{0}{3}
+    \pgfmathrandominteger{\rsize}{4}{9}
+    \pgfmathsetmacro{\rx}{(rand*8)-4}
+    \pgfmathsetmacro{\ry}{rand*2.4}
+    \begingroup
+      \ifcase\rcolor\relax
+        \def\confColor{nanmaPurple!70}%
+      \or
+        \def\confColor{nanmaGold!85}%
+      \or
+        \def\confColor{nanmaMint!80}%
+      \or
+        \def\confColor{nanmaCoral!75}%
+      \fi
+      \path[fill=\confColor, rotate=\rangle]
+        ($(card.south)+(\rx cm,\ry cm+0.6cm)$)
+        rectangle ++(\rsize*0.7pt,\rsize*0.7pt);
+    \endgroup
+  }
 \end{tikzpicture}
 
 \end{document}
