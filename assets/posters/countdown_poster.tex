@@ -129,10 +129,27 @@
     }
   \end{scope}
 
-  % Anniversary headline
-  \node[anchor=north, text=nanmaPurple]
+  % Anniversary headline with gradient
+  \node[anchor=north, inner sep=12pt, rounded corners=26pt,
+        shade, left color=nanmaPurple!95, right color=nanmaGold!90, shading angle=4,
+        text=white, blur shadow={shadow blur steps=10, shadow xshift=0cm, shadow yshift=-0.3cm}]
         (anniversary) at ($(card.north)+(0,-1.5cm)$)
-        {\englishfont\bfseries\fontsize{82}{84}\selectfont 8th Anniversary};
+        {\englishfont\bfseries\fontsize{80}{82}\selectfont 8th Anniversary};
+
+  \begin{scope}[on background layer]
+    \node[anchor=center, ellipse, minimum width=19cm, minimum height=6cm,
+          fill=nanmaPurple!20, opacity=0.25, blur shadow={shadow blur steps=12, shadow xshift=0cm, shadow yshift=-0.45cm}]
+          at ($(anniversary.center)$) {};
+  \end{scope}
+
+  % Logo pedestal
+  \begin{scope}[on background layer]
+    \node[anchor=north, ellipse, minimum width=15cm, minimum height=6.6cm,
+          fill=white, opacity=0.82, blur shadow={shadow blur steps=10, shadow xshift=0cm, shadow yshift=-0.35cm}]
+          (logoPedestal) at ($(anniversary.south)+(0,-0.6cm)$) {};
+    \draw[line width=4pt, color=nanmaPurple!35, opacity=0.4]
+          ($(logoPedestal.center)+(0,3.2cm)$) arc (90:450:5.4cm and 2.5cm);
+  \end{scope}
 
   % Logo
   \node[anchor=north, inner sep=0pt] (logo) at ($(anniversary.south)+(0,-0.8cm)$)
@@ -163,6 +180,32 @@
             {\malayalamfont\bfseries\fontsize{32}{34}\selectfont ദിവസങ്ങൾ}
         }};
 
+  % Countdown reflection
+  \begin{scope}[on background layer]
+    \pgfmathsetmacro{\reflectYOffset}{5.1}
+    \shade[shading angle=270, top color=nanmaPurple!18, bottom color=transparent!0, opacity=0.6]
+      ($(counterCenter)+(0,-\reflectYOffset cm)$) ellipse (4.7cm and 1.7cm);
+    \begin{scope}[opacity=0.16]
+      \path[clip] ($(counterCenter)+( -4.6cm,-0.2cm)$) rectangle ($(counterCenter)+(4.6cm,-5.6cm)$);
+      \node[circle, draw=nanmaPurple!25, line width=12pt, minimum size=9cm,
+            inner sep=0pt, fill=nanmaHighlight] at (counterCenter)
+            {\parbox{6.2cm}{\centering
+                {\englishfont\bfseries\fontsize{94}{92}\selectfont\DaysRemaining}\\[0.6em]
+                {\malayalamfont\bfseries\fontsize{32}{34}\selectfont ദിവസങ്ങൾ}
+            }};
+    \end{scope}
+  \end{scope}
+
+  % Motion arcs
+  \foreach \arcstart/\arclen/\radius/\color/\thick in {
+      -35/28/6.0/nanmaMint!70/2.4,
+      22/22/6.4/nanmaGold!65/2.0,
+      78/30/5.8/nanmaCoral!75/1.8}{
+    \draw[line width=\thick pt, color=\color, opacity=0.55, rounded corners=14pt]
+      ($(counterCenter)+(\arcstart:\radius cm)$)
+      arc[start angle=\arcstart, end angle=\arcstart+\arclen, radius=\radius cm];
+  }
+
   % Caption
   \node[anchor=north, align=center, text=nanmaCharcoal]
         at ($(counter.south)+(0,-1.8cm)$)
@@ -174,10 +217,6 @@
         minimum width=20cm, minimum height=1.8cm]
         at ($(card.south)+(0,3cm)$)
         {\englishfont\bfseries\fontsize{42}{44}\selectfont 27 December 2025};
-
-  \node[anchor=north, align=center, text=nanmaCharcoal!85]
-        at ($(card.south)+(0,1.4cm)$)
-        {\englishfont\bfseries\large\textsc{Celebrate Community • Cherish Friendship • Create Memories}};
 
   \pgfmathsetseed{20251109}
   \foreach \i in {1,...,48}{
@@ -201,6 +240,26 @@
         rectangle ++(\rsize*0.7pt,\rsize*0.7pt);
     \endgroup
   }
+
+  % Background bokeh particles
+  \begin{scope}[on background layer]
+    \pgfmathsetseed{20251201}
+    \foreach \i in {1,...,18}{
+      \pgfmathsetmacro{\bx}{rand*18-9}
+      \pgfmathsetmacro{\by}{rand*10-3}
+      \pgfmathsetmacro{\bsize}{rand*1.4+0.9}
+      \pgfmathrandominteger{\bsel}{0}{2}
+      \ifcase\bsel\relax
+        \def\particleColor{nanmaPurple!20}%
+      \or
+        \def\particleColor{nanmaGold!25}%
+      \or
+        \def\particleColor{nanmaMint!25}%
+      \fi
+      \shade[inner color=\particleColor, outer color=transparent!0, opacity=0.35]
+        ($(card.center)+(\bx cm,\by cm)$) circle (\bsize cm);
+    }
+  \end{scope}
 \end{tikzpicture}
 
 \end{document}
