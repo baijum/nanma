@@ -1,0 +1,16 @@
+# macOS
+.DS_Store
+
+# XeLaTeX build artifacts
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.synctex(busy)
+*.fdb_latexmk
+*.fls
+
+# Generated poster PDFs
+assets/posters/*.pdf
+

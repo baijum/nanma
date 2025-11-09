@@ -1,0 +1,139 @@
+\documentclass[12pt,a3paper]{article}
+% Compile with XeLaTeX. Ensure the Malayalam font (Rachana) and TeX Gyre Heros are installed.
+
+\usepackage{geometry}
+\geometry{margin=2cm}
+
+\usepackage{xcolor}
+\definecolor{nanmaPurple}{HTML}{7E1F85}
+\definecolor{nanmaCharcoal}{HTML}{2B2A2A}
+\definecolor{nanmaHighlight}{HTML}{F5F1F9}
+
+\usepackage{graphicx}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setmainlanguage{malayalam}
+\setotherlanguage{english}
+
+% Malayalam font selection with fallbacks
+\IfFontExistsTF{Rachana}{
+  \newfontfamily\malayalamfont[Script=Malayalam]{Rachana}
+  \newfontfamily\malayalamfontsf[Script=Malayalam]{Rachana}
+}{
+  \IfFontExistsTF{Malayalam Sangam MN}{
+    \newfontfamily\malayalamfont{Malayalam Sangam MN}
+    \newfontfamily\malayalamfontsf{Malayalam Sangam MN}
+  }{
+    \IfFontExistsTF{Malayalam MN}{
+      \newfontfamily\malayalamfont{Malayalam MN}
+      \newfontfamily\malayalamfontsf{Malayalam MN}
+    }{
+      \IfFontExistsTF{.SF Malayalam}{
+        \newfontfamily\malayalamfont{.SF Malayalam}
+        \newfontfamily\malayalamfontsf{.SF Malayalam}
+      }{
+        \newfontfamily\malayalamfont{Arial Unicode MS}
+        \newfontfamily\malayalamfontsf{Arial Unicode MS}
+      }
+    }
+  }
+}
+
+% Latin sans font selection with fallback
+\IfFontExistsTF{TeX Gyre Heros}{
+  \newfontfamily\englishfont{TeX Gyre Heros}
+  \setsansfont{TeX Gyre Heros}
+}{
+  \IfFontExistsTF{Helvetica Neue}{
+    \newfontfamily\englishfont{Helvetica Neue}
+    \setsansfont{Helvetica Neue}
+  }{
+    \newfontfamily\englishfont{Arial}
+    \setsansfont{Arial}
+  }
+}
+
+\usepackage{tikz}
+\usetikzlibrary{calc, shadows.blur}
+\usepackage{pgfcalendar}
+
+\pagestyle{empty}
+
+% Countdown target (27 December 2025)
+\newcommand{\TargetYear}{2025}
+\newcommand{\TargetMonth}{12}
+\newcommand{\TargetDay}{27}
+
+\newcommand{\PadTwo}[1]{%
+  \ifnum#1<10 0\fi
+  \number#1%
+}
+
+\edef\TargetISO{\TargetYear-\TargetMonth-\TargetDay}
+\edef\CurrentISO{\number\year-\PadTwo{\month}-\PadTwo{\day}}
+
+\newcount\TargetJulian
+\newcount\CurrentJulian
+\newcount\DaysDiff
+
+\pgfcalendardatetojulian{\TargetISO}{\TargetJulian}
+\pgfcalendardatetojulian{\CurrentISO}{\CurrentJulian}
+
+\DaysDiff=\TargetJulian
+\advance\DaysDiff by -\CurrentJulian
+\ifnum\DaysDiff<0\relax
+  \DaysDiff=0\relax
+\fi
+
+\newcommand{\DaysRemaining}{\number\DaysDiff}
+
+\begin{document}
+
+% Background layer
+\begin{tikzpicture}[remember picture, overlay]
+  \path[shade, left color=nanmaHighlight, right color=white]
+    (current page.south west) rectangle (current page.north east);
+\end{tikzpicture}
+
+% Poster layout
+\begin{tikzpicture}[remember picture, overlay, node distance=1cm]
+  \node[rounded corners=30pt, fill=white, draw=nanmaHighlight!80!nanmaCharcoal, ultra thick,
+        minimum width=25cm, minimum height=35cm, blur shadow={shadow blur steps=8, shadow xshift=0.4cm, shadow yshift=-0.4cm}]
+        (card) at (current page.center) {};
+
+  % Anniversary headline
+  \node[anchor=north, text=nanmaPurple]
+        (anniversary) at ($(card.north)+(0,-1.5cm)$)
+        {\englishfont\bfseries\fontsize{82}{84}\selectfont 8th Anniversary};
+
+  % Logo
+  \node[anchor=north, inner sep=0pt] (logo) at ($(anniversary.south)+(0,-0.8cm)$)
+        {\includegraphics[width=11cm]{assets/posters/logo_nanma.pdf}};
+
+  % Countdown circle
+  \node[circle, draw=nanmaPurple, line width=14pt, minimum size=9cm,
+        inner sep=0pt, fill=nanmaHighlight, blur shadow={shadow blur steps=12, shadow xshift=0.5cm, shadow yshift=-0.5cm}]
+        (counter) at ($(logo.south)+(0,-2.8cm)$)
+        {\parbox{6.2cm}{\centering
+            {\englishfont\bfseries\fontsize{94}{92}\selectfont\DaysRemaining}\\[0.6em]
+            {\malayalamfont\bfseries\fontsize{32}{34}\selectfont ദിവസങ്ങൾ}
+        }};
+
+  % Caption
+  \node[anchor=north, align=center, text=nanmaCharcoal]
+        at ($(counter.south)+(0,-1.8cm)$)
+        {\malayalamfont\bfseries\fontsize{40}{44}\selectfont ഇനി {\englishfont\bfseries\DaysRemaining} നാളുകൾ മാത്രം};
+
+  % Date band
+  \node[anchor=north, align=center, text=white,
+        fill=nanmaPurple, rounded corners=18pt,
+        minimum width=20cm, minimum height=1.8cm]
+        at ($(card.south)+(0,3cm)$)
+        {\englishfont\bfseries\fontsize{42}{44}\selectfont 27 December 2025};
+\end{tikzpicture}
+
+\end{document}
+
+% Compile with: xelatex assets/posters/countdown_poster.tex
+% Ensure the logo asset exists at assets/posters/logo_nanma.pdf
+
