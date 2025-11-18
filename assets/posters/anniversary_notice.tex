@@ -1,0 +1,144 @@
+\documentclass[12pt,a5paper,landscape]{article}
+% Compile with XeLaTeX. Ensure Malayalam fonts are installed.
+% This generates a single A5 landscape notice per page.
+
+\usepackage{geometry}
+\geometry{margin=0.5cm}
+
+\usepackage{xcolor}
+% Black and white colors (gray allowed)
+\definecolor{textBlack}{gray}{0}
+\definecolor{textGray}{gray}{0.3}
+\definecolor{borderGray}{gray}{0.5}
+\definecolor{lightGray}{gray}{0.9}
+
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setmainlanguage{malayalam}
+\setotherlanguage{english}
+
+% Malayalam font selection with fallbacks
+\IfFontExistsTF{Rachana}{
+  \newfontfamily\malayalamfont[Script=Malayalam]{Rachana}
+  \newfontfamily\malayalamfontsf[Script=Malayalam]{Rachana}
+}{
+  \IfFontExistsTF{Malayalam Sangam MN}{
+    \newfontfamily\malayalamfont{Malayalam Sangam MN}
+    \newfontfamily\malayalamfontsf{Malayalam Sangam MN}
+  }{
+    \IfFontExistsTF{Malayalam MN}{
+      \newfontfamily\malayalamfont{Malayalam MN}
+      \newfontfamily\malayalamfontsf{Malayalam MN}
+    }{
+      \IfFontExistsTF{.SF Malayalam}{
+        \newfontfamily\malayalamfont{.SF Malayalam}
+        \newfontfamily\malayalamfontsf{.SF Malayalam}
+      }{
+        \newfontfamily\malayalamfont{Arial Unicode MS}
+        \newfontfamily\malayalamfontsf{Arial Unicode MS}
+      }
+    }
+  }
+}
+
+% Latin sans font selection with fallback
+\IfFontExistsTF{TeX Gyre Heros}{
+  \newfontfamily\englishfont{TeX Gyre Heros}
+  \setsansfont{TeX Gyre Heros}
+}{
+  \IfFontExistsTF{Helvetica Neue}{
+    \newfontfamily\englishfont{Helvetica Neue}
+    \setsansfont{Helvetica Neue}
+  }{
+    \newfontfamily\englishfont{Arial}
+    \setsansfont{Arial}
+  }
+}
+
+\usepackage{graphicx}
+
+\usepackage{tikz}
+\usetikzlibrary{calc, shadows.blur, backgrounds, decorations.text}
+
+\pagestyle{empty}
+
+\begin{document}
+
+% A5 landscape: 21cm × 14.8cm
+% Single notice per page
+
+% Background
+\begin{tikzpicture}[remember picture, overlay]
+  \fill[color=lightGray] (current page.south west) rectangle (current page.north east);
+\end{tikzpicture}
+
+\begin{tikzpicture}[remember picture, overlay]
+
+  % A5 landscape notice
+  \node[anchor=center, inner sep=0pt,
+        fill=white, minimum width=20cm, minimum height=14.5cm,
+        rounded corners=8pt, blur shadow={shadow blur steps=8, shadow xshift=0.2cm, shadow yshift=-0.2cm}]
+        (notice) at (current page.center) {};
+  
+  % Notice border
+  \draw[rounded corners=8pt, borderGray, line width=2pt] 
+        (notice.north west) rectangle (notice.south east);
+  
+  % Notice header decoration
+  \fill[rounded corners=8pt, lightGray] 
+        (notice.north west) rectangle ($(notice.north east)+(0,-2.2cm)$);
+  \draw[rounded corners=8pt, borderGray, line width=1pt] 
+        (notice.north west) -- ($(notice.north west)+(0,-2.2cm)$) -- 
+        ($(notice.north east)+(0,-2.2cm)$) -- (notice.north east);
+  
+  % Registration number (top-right)
+  \node[anchor=north east, inner sep=0.4cm, align=right, text=textBlack]
+        at ($(notice.north east)+(-0.2cm,-0.2cm)$) {
+    {\englishfont\fontsize{8}{10}\selectfont
+     (REG NO: KKD/CA/798/2017)}
+  };
+
+  % Notice content
+  \node[anchor=north, inner sep=0.6cm, align=center, text=textBlack]
+        at ($(notice.north)+(0,-0.2cm)$) {
+    \parbox{18.8cm}{\centering
+      % Association name with logo
+      \begin{tabular}[b]{@{}c@{\hspace{0.4cm}}c@{}}
+        \includegraphics[width=2cm]{assets/posters/logo.jpg} &
+        \raisebox{2em}{\malayalamfont\bfseries\fontsize{30}{34}\selectfont
+         നന്മ റസിഡന്റ്സ് അസോസിയേഷൻ}
+      \end{tabular}\\[0.6em]
+      
+      % Anniversary title
+      {\malayalamfont\bfseries\fontsize{30}{34}\selectfont
+       എട്ടാം വാർഷികാഘോഷം}\\[1.2em]
+      
+      {\malayalamfont\fontsize{17}{21}\selectfont
+       2025 ഡിസം: 27 ശനി രാവിലെ 9 മുതൽ രാത്രി 10 വരെ}\\[1em]
+      
+      % Place
+      {\malayalamfont\fontsize{17}{21}\selectfont
+       സ്ഥലം: പാറക്കോട്ട്പറമ്പ്}\\[1.2em]
+      
+      % Description
+      {\malayalamfont\fontsize{16}{20}\selectfont
+       വിവിധ മേഖലകളിൽ കഴിവ് തെളിയിച്ചവർക്ക് അനുമോദനം കലാ കായിക വിനോദ പരിപാടികൾ}\\[1.2em]
+      
+      % Literary competition
+      {\malayalamfont\fontsize{16}{20}\selectfont
+       ഡിസംബർ 14 ന് സാഹിത്യ മത്സരം}\\[1.2em]
+      
+      % Welcome message (larger font)
+      {\malayalamfont\bfseries\fontsize{24}{28}\selectfont
+       ഏവർക്കും സ്വാഗതം}
+    }
+  };
+
+\end{tikzpicture}
+
+\end{document}
+
+% Compile with: xelatex assets/posters/anniversary_notice.tex
+% This generates a single A5 landscape notice per page.
+% Use pdfjam to combine two pages into A4: pdfjam --nup 1x2 --a4paper anniversary_notice.pdf -o anniversary_notice_a4.pdf
+
