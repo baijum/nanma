@@ -157,6 +157,21 @@
     }
   };
 
+  % Fancy bottom decoration - geometric pattern
+  \coordinate (decStart) at ($(notice.south west)+(1cm,1cm)$);
+  \coordinate (decEnd) at ($(notice.south east)+(-1cm,1cm)$);
+  
+  % Decorative border line
+  \draw[borderGray, line width=1pt] (decStart) -- (decEnd);
+  
+  % Decorative geometric pattern - diamonds
+  \foreach \x in {2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18} {
+    \coordinate (diamondPos) at ($(decStart)+(\x*1cm,0)$);
+    \draw[borderGray, line width=0.8pt] 
+      ($(diamondPos)+(0,0.15cm)$) -- ($(diamondPos)+(0.1cm,0)$) --
+      ($(diamondPos)+(0,-0.15cm)$) -- ($(diamondPos)+(-0.1cm,0)$) -- cycle;
+  }
+
 \end{tikzpicture}
 
 \end{document}
