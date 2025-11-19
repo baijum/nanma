@@ -46,6 +46,22 @@
   }
 }
 
+% Suruma font for highlighted text (with fallbacks)
+\IfFontExistsTF{Suruma}{
+  \newfontfamily\surumafont[Script=Malayalam]{Suruma}
+}{
+  \IfFontExistsTF{Malayalam Sangam MN}{
+    \newfontfamily\surumafont{Malayalam Sangam MN}
+  }{
+    \IfFontExistsTF{Malayalam MN}{
+      \newfontfamily\surumafont{Malayalam MN}
+    }{
+      % Fallback to bold version of regular Malayalam font
+      \let\surumafont\malayalamfont
+    }
+  }
+}
+
 % Latin sans font selection with fallback
 \IfFontExistsTF{TeX Gyre Heros}{
   \newfontfamily\englishfont{TeX Gyre Heros}
@@ -116,7 +132,7 @@
       
       % Anniversary title
       {\malayalamfont\bfseries\fontsize{30}{34}\selectfont
-       എട്ടാം വാർഷികാഘോഷം}\\[1.2em]
+       8-ാം വാർഷികാഘോഷം}\\[1.2em]
       
       {\malayalamfont\fontsize{17}{21}\selectfont
        2025 ഡിസം: 27 ശനി രാവിലെ 9 മുതൽ രാത്രി 10 വരെ}\\[1em]
@@ -129,9 +145,11 @@
       {\malayalamfont\fontsize{16}{20}\selectfont
        വിവിധ മേഖലകളിൽ കഴിവ് തെളിയിച്ചവർക്ക് അനുമോദനം കലാ കായിക വിനോദ പരിപാടികൾ}\\[1.2em]
       
-      % Literary competition
-      {\malayalamfont\fontsize{16}{20}\selectfont
-       ഡിസംബർ 14 ന് സാഹിത്യ മത്സരം}\\[1.2em]
+      % Literary competition with dotted border
+      \tikz[baseline=(text.base)] \node[draw=textBlack, dotted, line width=1.5pt, inner sep=0.5em, rounded corners=4pt] (text) {
+        {\malayalamfont\itshape\fontsize{20}{24}\selectfont
+         ഡിസംബർ 14 ന് സാഹിത്യ മത്സരം}
+      };\\[1.2em]
       
       % Welcome message (larger font)
       {\malayalamfont\bfseries\fontsize{24}{28}\selectfont
