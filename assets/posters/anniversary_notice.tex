@@ -18,24 +18,29 @@
 \setotherlanguage{english}
 
 % Malayalam font selection with fallbacks
-\IfFontExistsTF{Rachana}{
-  \newfontfamily\malayalamfont[Script=Malayalam]{Rachana}
-  \newfontfamily\malayalamfontsf[Script=Malayalam]{Rachana}
+\IfFontExistsTF{Noto Sans Malayalam}{
+  \newfontfamily\malayalamfont[Script=Malayalam]{Noto Sans Malayalam}
+  \newfontfamily\malayalamfontsf[Script=Malayalam]{Noto Sans Malayalam}
 }{
-  \IfFontExistsTF{Malayalam Sangam MN}{
-    \newfontfamily\malayalamfont{Malayalam Sangam MN}
-    \newfontfamily\malayalamfontsf{Malayalam Sangam MN}
+  \IfFontExistsTF{Rachana}{
+    \newfontfamily\malayalamfont[Script=Malayalam]{Rachana}
+    \newfontfamily\malayalamfontsf[Script=Malayalam]{Rachana}
   }{
-    \IfFontExistsTF{Malayalam MN}{
-      \newfontfamily\malayalamfont{Malayalam MN}
-      \newfontfamily\malayalamfontsf{Malayalam MN}
+    \IfFontExistsTF{Malayalam Sangam MN}{
+      \newfontfamily\malayalamfont{Malayalam Sangam MN}
+      \newfontfamily\malayalamfontsf{Malayalam Sangam MN}
     }{
-      \IfFontExistsTF{.SF Malayalam}{
-        \newfontfamily\malayalamfont{.SF Malayalam}
-        \newfontfamily\malayalamfontsf{.SF Malayalam}
+      \IfFontExistsTF{Malayalam MN}{
+        \newfontfamily\malayalamfont{Malayalam MN}
+        \newfontfamily\malayalamfontsf{Malayalam MN}
       }{
-        \newfontfamily\malayalamfont{Arial Unicode MS}
-        \newfontfamily\malayalamfontsf{Arial Unicode MS}
+        \IfFontExistsTF{.SF Malayalam}{
+          \newfontfamily\malayalamfont{.SF Malayalam}
+          \newfontfamily\malayalamfontsf{.SF Malayalam}
+        }{
+          \newfontfamily\malayalamfont{Arial Unicode MS}
+          \newfontfamily\malayalamfontsf{Arial Unicode MS}
+        }
       }
     }
   }
@@ -100,12 +105,12 @@
 
   % Notice content
   \node[anchor=north, inner sep=0.6cm, align=center, text=textBlack]
-        at ($(notice.north)+(0,-0.2cm)$) {
+        at ($(notice.north)+(0,-0.1cm)$) {
     \parbox{18.8cm}{\centering
       % Association name with logo
       \begin{tabular}[b]{@{}c@{\hspace{0.4cm}}c@{}}
         \includegraphics[width=2cm]{assets/posters/logo.jpg} &
-        \raisebox{2em}{\malayalamfont\bfseries\fontsize{30}{34}\selectfont
+        \raisebox{2em}{\malayalamfont\bfseries\fontsize{24}{28}\selectfont
          നന്മ റസിഡന്റ്സ് അസോസിയേഷൻ}
       \end{tabular}\\[0.6em]
       
